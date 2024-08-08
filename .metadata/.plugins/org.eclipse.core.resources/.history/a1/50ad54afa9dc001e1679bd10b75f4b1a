@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{LayoutPadrao}">
+<head>
+<title>Pesquisa de títulos</title>
+</head>
+
+<section layout:fragment="conteudo">
+	<div th:replace="MensagemGeral"></div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="clearfix"> <!-- classe clearfix do bootstrap -->
+				<h1 class="panel-title ifsc-titulo-panel">Pesquisa de títulos</h1>
+				<a class="btn btn-link ifsc-link-panel" href="/titulos/novo">Novo título</a>
+			</div>
+		</div>
+	
+		<div class="panel-body">
+			<!-- Dentro deste panel-body será adicionado um form, pois esse é necessário para submeter uma requisição ao servidor, como por exmeplo, uma requisição GET -->
+			<!-- uso de th:object e th:field para manter o último valor da pesquisa no form, isto é, não irá limpar o campo de pesquisa após a requisição -->
+			<form method="GET" class="form-horizontal" action="/titulos" th:object=${filtro}>
+				<div class="form-group">
+					<div class="col-sm-4">
+						<div class="input-group">
+							<input class="form-control" placeholder="Qual título você está procurando?"
+									autofocus="autofocus" th:field="*{descricao}"></input>
+							<span class="input-group-btn">
+								<button type="submit" class="btn btn-default">
+									<i class="glyphicon glyphicon-search"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</form>
+			
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th class="text-center col-md-1">#</th>
+						<th>Descrição</th>
+						<th class="text-center col-md-2">Data de vencimento</th>
+						<th class="text-right col-md-2">Valor</th>
+						<th class="text-center col-md-2">Status</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="titulo: ${titulos}">
+						<td class="text-center" th:text="${titulo.codigo}">1</td>
+						<td th:text="${titulo.descricao}"></td>
+						<td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
+						<td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
+						<td class="text-center" th:attr="data-role=${titulo.codigo}"> <!--  th:attr data-role foi criado para poder obter uma referêncai para poder mudar o status de um título após clicar no botão receber sem precisar fazer uma atualização de toda página, ou seja, só vai mudar o status de uma determinada linha. A programação do data-role será feita no js cobranca.js -->
+							<span class="label" th:text="${titulo.status.descricao}"
+								th:classappend="${titulo.pendente ? 'label-danger' : 'label-success'}"></span>
+						</td>
+						<td class="text-center">
+							<a class="btn btn-link btn-xs" th:href="@{/titulos/{codigo}(codigo=${titulo.codigo})}"
+									title="Editar" rel="tooltip" data-placement="top">  <!-- configuração para exibir tooltip, o que é programado no cobranca.js.  -->
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a> 
+							<a class="btn btn-link btn-xs" data-toggle="modal" data-target="#confirmacaoExclusaoModal"
+									th:attr="data-codigo=${titulo.codigo}, data-descricao=${titulo.descricao}"
+									title="Excluir" rel="tooltip" data-placement="top"> 
+								<span class="glyphicon glyphicon-remove"></span>
+							</a>
+							<!-- th:if -- se for verdadeiro renderiza, caso contrário, não renderiza 
+								js-atualizar-status -- js é uma classe de marcação do javascript -- logo é necessário fazer a programação para ela no arquivo cobranca.js -->
+							<!-- data-codigo é adicionado no link para poder obter o seu valor pelo conbranca.js -->	
+							<a class="btn btn-link btn-xs js-atualizar-status" th:if="${titulo.pendente}"
+									title="Receber" rel="tooltip" data-placement="top"
+									th:attr="data-codigo=${titulo.codigo}" 
+									th:href="@{/titulos/{codigo}/receber(codigo=${titulo.codigo})}"> <!-- criando uma url e link para fazer a requisição (por exemplo: href="/titulos/8/receber". Com essa URL será implementado um código via js para evitar que a requisição tenha um comportamento default, ou seja, chamar a página toda -->
+								<span class="glyphicon glyphicon-check"></span>
+							</a>
+						</td>
+					</tr>				
+					<tr>
+						<td colspan="6" th:if="${#lists.isEmpty(titulos)}">Nenhum título foi encontrado</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div th:replace="DialogoConfirmacaoExclusao"></div>
+		
+	</div>
+</section>
+
+</html>

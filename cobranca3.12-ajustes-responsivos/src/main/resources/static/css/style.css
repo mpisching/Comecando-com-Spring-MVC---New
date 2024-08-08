@@ -1,0 +1,28 @@
+/* Tela grande 
+   @media está sendo colocado para melhorar a responsividade */
+@media(min-width: 768px) {
+	.panel-default {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	
+	.alert {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+}
+
+.navbar-brand {
+	padding-top: 12px;
+}
+	
+.ifsc-link-panel {
+	float: right;
+	padding: 0px; /**tira o padding */
+}
+
+.ifsc-titulo-panel {
+	float: left;
+	padding-top: 2px;
+}

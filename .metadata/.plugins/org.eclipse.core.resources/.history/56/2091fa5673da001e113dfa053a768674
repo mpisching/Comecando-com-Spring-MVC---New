@@ -1,0 +1,21 @@
+$('#confirmacaoExclusaoModal').on('show.bs.modal', function(event) {
+	//pegando o botão e quem desparou o evento
+	var button = $(event.relatedTarget);
+	
+	var codigoTitulo = button.data('codigo'); //recupera os atributos do tipo data do form, no caso o codigo do titulo
+	var descricaoTitulo = button.data('descricao');
+	
+	var modal = $(this); //pegando o objet jquery
+	
+	var form = modal.find('form');
+	
+	var action = form.attr('action'); //isso seria o action do form, isto é, "<form action="/titulos" method="POST">" do DialogoConfirmacaoExclusao.html
+	if (!action.endsWith('/')) {
+		action += '/'; //para adicionar '/' após o nome da action do form = "/titulos/..."
+	} 
+	form.attr('action', action + codigoTitulo);
+	
+	modal.find('.modal-body span').html('Tem certeza que deseja excluir o título <strong>' + descricaoTitulo + '</strong>?'); //localiza o class modal-body e a tag span no DialogoConfirmacaoExclusao.html para mudar a mensagem para o usuário, isto é, aparecerá o texto do span mais a descrição de um título dinâmicamente conforme a seleção do usuário 
+	
+	//alert(codigoTitulo);
+});

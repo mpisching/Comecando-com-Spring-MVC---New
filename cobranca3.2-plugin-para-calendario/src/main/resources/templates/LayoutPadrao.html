@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"> 
+	<head>
+		<meta charset="UTF-8" />
+		<title>Cobrança</title>
+		<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/bootstrap-datepicker.standalone.min.css"/> <!-- esse arquivo foi obtido do git de implementação do bootstrap -->
+		<link rel="shortcut icon" href="/images/IF_32x32.png" type="image/x-icon"/>
+	</head>
+<body>
+    
+    <header th:replace="Cabecalho"></header>
+    <section layout:fragment="conteudo">
+    	<p>Conteúdo principal</p>
+    </section>
+    
+    <script src="/js/jquery-3.7.1.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/bootstrap-datepicker.min.js"></script> <!-- este e o arquivo js abaixo foram obtidos do git do bootstrap --> 
+	<script src="/js/bootstrap-datepicker.pt-BR.min.js"></script> 
+    <script src="/js/cobranca.js"></script>
+ </body>
+ </html>

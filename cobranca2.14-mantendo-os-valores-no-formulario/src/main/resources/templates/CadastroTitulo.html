@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{LayoutPadrao}">
+<head>
+	<title>Cadastro de Título</title>
+</head>
+
+
+<!-- seção identifica por "conteudo" que será inserida no LayoutPadrao.html  -->
+<!-- adição da declaração th:object para trazer os dados de um objeto título que será utilizado para validar os seus atributos com bean validadtion-->
+<section layout:fragment="conteudo">
+	<form class="form-horizontal" method="POST" action="/titulos" th:object="${titulo}">
+ 		<!-- a div abaixo já é exibida logo que abrir a página, então o código será melhorado nas linhas
+		a seguir, entrando com o thymeleaf para exibir a mensagem apenas quando o botão salvar for pressionado
+		<div class="alert alert-success">
+			<span>Título salvo com sucesso</span>
+		</div>	
+		 -->
+		 <!-- thymeleaf, lembrando que é necessário colocar o namespace dele (xmlns:th="http://www.thymeleaf.org) no início do arquivo -->
+<!-- 		<div class="alert alert-success" th:if="${!#strings.isEmpty(mensagem)}">
+			<span th:text="${mensagem}"></span>
+		</div>
+		 --> 
+		<!-- fim da div com a declaração do thymeleaf -->
+		
+		<!-- adicionando uma div para exibir mensagens de erro -->
+		<!-- fields - ele sabe que se trata dos fields do objeto titulo declarado em th:object no form -->
+		<!-- enfim, está dizendo que se houver algum erro em algum dos atributos, está dizendo que é para renderizar esta div com span no navegador -->
+<!-- 		<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+			<div th:each="detailedError : ${#fields.detailedErrors()}">
+				<span th:text="${detailedError.message}"></span>
+			</div>
+		</div>
+	 -->	
+	 	<!-- fim da div para renderizar mensagens de erroas -->
+	 	
+	 	<!-- as div acima foram colacadas no arquivo Mensagem.html e agora serão chamadas pela linha abaixo -->
+	 	<div th:replace="Mensagem"></div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="clearfix"> <!-- classe clearfix do bootstrap -->
+					<h1 class="panel-title ifsc-titulo-panel">Novo título</h1>
+					<a class="btn btn-link ifsc-link-panel" href="/titulos">Voltar para pesquisa</a>
+					<!-- ifsc-link-panel vai ser definido como uma classe e configurado no CSS -->
+				</div>
+			</div>
+
+			<div class="panel-body">
+				<div class="form-group" th:classappend="${#fields.hasErrors('descricao')} ? has-error">
+					<label for="descricao" class="col-sm-2 control-label">Descrição</label>
+					<div class="col-sm-4">
+						<!-- a seguir o atributo name será substituido por th:field="*{descricao}" com a finalidade de manter
+							o valor na view quando um campo for inválido, pois isso fará referência ao atributo
+							do objeto referenciado por th:object="${titulo}"  do thymeleaf
+							O * será utilizado na expressão th para se referir ao valor do atributo do objeto-->
+						<!-- <input type="text" class="form-control" id="descricao" name="descricao" />  -->
+						<input type="text" class="form-control" id="descricao" th:field="*{descricao}" />
+					</div>
+				</div>
+				<div class="form-group" th:classappend="${#fields.hasErrors('dataVencimento')} ? has-error">
+					<label for="dataVencimento" class="col-sm-2 control-label">Data
+						de vencimento</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="dataVencimento" th:field="*{dataVencimento}"/>
+					</div>
+				</div>
+				<!-- adicionando um classappend do thyemleaf para deixar o label e caixa de texto em vermelho com has-error do bootstrap quando o valor for inválido-->
+				<!-- no thymeleaf se usa # para indicar um método/expressão do thymeleaf que deve ser
+					delimitado por {}. As instruções th devem estar entre {}, note que has-erro, que é do bootstrap, está fora da marcação {} -->
+				<div class="form-group" th:classappend="${#fields.hasErrors('valor')} ? has-error">
+					<label for="valor" class="col-sm-2 control-label">Valor</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="valor" th:field="*{valor}"/>
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="status" class="col-sm-2 control-label">Status</label>
+					<div class="col-sm-2">
+						<select class="form-control" name="status">
+							<!-- tornando o combo dinâmico com thymeleaf -->
+							<!-- 
+							<option value="PENDENTE">Pendente</option>
+							<option value="RECEBIDO">Recebido</option>
+							 -->
+							<!--  <option th:each="status: ${todosStatusTitulo}" th:value="${status}" th:text="${status.descricao}"></option> -->
+							<!-- a linha a seguir foi melhorada para carregar a lista de status dinamicamente por meio do método todosStatusTitulo() do Controller -->
+							<option th:each="status: ${todosStatusTitulo}" th:value="${status}" th:text="${status.descricao}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-primary">Salvar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>
+</html>

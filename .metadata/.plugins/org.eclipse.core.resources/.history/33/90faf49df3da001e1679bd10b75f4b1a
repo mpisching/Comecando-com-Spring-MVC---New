@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+	<div class="modal fade" id="confirmacaoExclusaoModal" tabindex="-1" data-keyboard="false" data-backdrop="static"> <!-- data-keyboard e data-backdrop para tirar ações de telcas como esc para não fechar o modal -->
+		<div class="modal-dialog">
+			<!-- <form action="/titulos/4" method="POST">  aqui ta o id do titulo está fixo, vamos tornar mais dinâmico--> 
+			<!--  <form action="/titulos" method="POST"> --><!-- PODERIA SER METHOD="DELETE", MAS PARA O SPRING ENTENDER USA-SE POST E A DECLARAÇÃO DA LINHA SEGUINTE -->
+			<!--  	<input type="hidden" name="_method" value="DELETE"/>--> <!-- ISSO PARA MAPEAR NO CONTROLLER COM SPRING -->
+			<!--  a seguir uma forma melhorada usando thymeleaf para declarar o form sem precisar colocar um hidden input para DELETE -->
+			<!--
+			Veja que retiramos o hidden input e usamos o th:method="DELETE". Desta forma o Thymeleaf já adiciona o hidden input para a gente. Se você inspecionar o form no browser, verá que estaremos usando o método POST no form, mas terá abaixo o hidden method DELETE em um hidden input. 
+			 -->
+			<!--  <form action="/titulos" method="POST" th:method="DELETE"> -->
+			<!--  a tag form será reescrita para evitar a concatenação de vários código na action quando o botão cancelar do diálogo modal for pressionado, exemplo, /titulo/4/4/4 -->
+			<form th:attr="data-url-base='/titulos'" method="POST" th:method="DELETE"> 	
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Você tem certeza?</h4>
+					</div>
+					
+					<div class="modal-body">
+						<span>Tem certeza que deseja apagar o título?</span>
+					</div>
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-link" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-primary">Excluir</button>
+					</div>
+					
+				</div>
+			</form>
+		</div>
+	</div>
+</html>

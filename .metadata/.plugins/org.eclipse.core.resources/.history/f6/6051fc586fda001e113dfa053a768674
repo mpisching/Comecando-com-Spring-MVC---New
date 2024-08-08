@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{LayoutPadrao}">
+	<!-- nome do arquivo html que define o layout padrão -->
+<head>
+<title>Pesquisa de títulos</title>
+</head>
+
+<!-- seção identifica por "conteudo" que será inserida no LayoutPadrao.html  -->
+<section layout:fragment="conteudo">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="clearfix"> <!-- classe clearfix do bootstrap -->
+				<h1 class="panel-title ifsc-titulo-panel">Pesquisa de títulos</h1>
+				<a class="btn btn-link ifsc-link-panel" href="/titulos/novo">Novo título</a>
+				<!-- ifsc-link-panel vai ser definido como uma classe e configurado no CSS -->
+			</div>
+		</div>
+	
+		<div class="panel-body">
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th class="text-center col-md-1">#</th>
+						<th>Descrição</th>
+						<th class="text-center col-md-2">Data de vencimento</th>
+						<th class="text-right col-md-2">Valor</th>
+						<th class="text-center col-md-2">Status</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="titulo: ${titulos}">
+						<td class="text-center" th:text="${titulo.codigo}">1</td>
+						<td th:text="${titulo.descricao}"></td>
+						<!-- abaixo a expressão thymeleaf é colocada entre duas {} para executar a formatação de data que foi definida na classe Titulo e a mesma coisa para o valor  -->
+						<td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
+						<!-- abaixo uso do caracter | (pipe) para concatenar o R$ no resultado, caso contrário entende-se que o $ é parte da expressão Thymeleaf -->
+						<td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
+						<td class="text-center">
+							<span class="label" th:text="${titulo.status.descricao}"
+								th:classappend="${titulo.pendente ? 'label-danger' : 'label-success'}"></span>
+						</td>
+						<td class="text-center">
+							<!--  <a class="btn btn-link btn-xs" href="/titulos/4"> -->
+							<!-- uso do @ na expressão do thymeleaf para montar link  -->
+							<!-- Na expressão o {codigo} será substituído pela expressão (codigo=${titulo.codigo})}, para montar um link, tipo "/titulos/4" -->
+							<!-- {codigo} é uma variável qaue vai receber o código encontrado por (codigo=${titulo.codigo}) -->
+							<a class="btn btn-link btn-xs" th:href="@{/titulos/{codigo}(codigo=${titulo.codigo})}"
+									th:attr="data-codigo=${titulo.codigo}"> <!-- data-codigo será alimentado para poder ser usado pelo js, mais precisamente no código cobranca.js, e th:attr é colocado para o thymeleaf entender issso --> 
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a> 
+							<a class="btn btn-link btn-xs" data-toggle="modal" data-target="#confirmacaoExclusaoModal">
+								<span class="glyphicon glyphicon-remove"></span>
+							</a>
+						</td>
+					</tr>				
+					<tr>
+						<td colspan="6" th:if="${#lists.isEmpty(titulos)}">Nenhum título foi encontrado</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div th:replace="DialogoConfirmacaoExclusao"></div>
+		
+	</div>
+</section>
+
+</html>
