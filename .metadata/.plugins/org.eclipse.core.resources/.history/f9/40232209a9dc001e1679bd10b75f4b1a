@@ -1,6 +1,0 @@
-package br.edu.ifsc.fln.cobranca.repository.filter;
-
-public class TituloFilter {
-	private String descricao;
-	
-}
